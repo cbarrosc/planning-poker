@@ -1,3 +1,4 @@
+import { newRequestId } from './requestId';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Command, CommandInput, SessionSnapshot } from '@poker/shared';
 import { api, ApiError } from './api';
@@ -93,7 +94,7 @@ export function useSession(code: string) {
         command: {
           ...input,
           expectedRevision: current.current.revision,
-          requestId: crypto.randomUUID(),
+          requestId: newRequestId(),
         },
       };
     try {

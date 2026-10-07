@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 const port = process.env.E2E_PORT ?? '3100';
-const baseURL = `http://localhost:${port}`;
+const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${port}`;
 export default defineConfig({
   testDir: './apps/web/tests',
   fullyParallel: false,

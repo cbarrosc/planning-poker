@@ -12,7 +12,23 @@ Abre http://localhost:3000. Crea una sesión e invita a tu equipo mediante códi
 
 El volumen `poker-data` conserva sesiones, tareas, rondas y votos al reiniciar. `docker compose down` conserva el volumen; `down -v` lo elimina junto con los datos. No se requiere otro servicio. La versión inicial funciona con una sola réplica del servidor.
 
-Para el VPS que proporcionará tu colega, copia `.env.example` a `.env` y establece `PUBLIC_ORIGIN=https://tu-dominio` y `COOKIE_SECURE=true` cuando haya HTTPS. El proxy debe conservar Origin, transmitir WebSocket y enviar tráfico al puerto 3000 del contenedor. El puerto publicado se configura mediante `PORT`; si lo cambias para acceso directo, ajusta también `PUBLIC_ORIGIN`. No se incluye configuración ni administración del VPS.
+### Red local
+
+La configuración inicial permite entrar desde `http://localhost:3000` y desde `http://IP-DE-TU-PC:3000`. Comparte la dirección con personas conectadas a la misma red. Deja `PUBLIC_ORIGIN` vacío y `COOKIE_SECURE=false` para HTTP. Cada solicitud de escritura y conexión WebSocket debe tener el mismo origen que la dirección solicitada.
+
+En Windows puedes consultar tu IPv4 con `ipconfig`. Si otros equipos no conectan, permite el puerto TCP 3000 en el firewall para redes privadas y comprueba que el Wi-Fi no tenga aislamiento de clientes. Mantén el equipo encendido. La identidad depende de la dirección usada: usa siempre la misma IP o nombre para conservar el acceso al moderador. En HTTP, el botón de compartir muestra un enlace seleccionable si el navegador no permite copiar automáticamente.
+
+### VPS con HTTPS
+
+Copia `.env.example` a `.env` y establece:
+
+```dotenv
+PUBLIC_ORIGIN=https://poker.tu-dominio.com
+COOKIE_SECURE=true
+PORT=3000
+```
+
+El proxy debe conservar Origin, transmitir WebSocket y enviar tráfico al puerto 3000 del contenedor. Se valida el dominio público explícito aunque el proxy contacte al contenedor por HTTP. Después de cambiar `.env`, ejecuta `docker compose up -d`. El puerto publicado se configura mediante `PORT`. No se incluye configuración ni administración del VPS.
 
 ## Desarrollo
 

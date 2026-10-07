@@ -31,7 +31,8 @@ export function Session({ code }: { code: string }) {
     accept,
   } = useSession(code);
   const [tasksOpen, setTasksOpen] = useState(false),
-    [copied, setCopied] = useState(false);
+    [copied, setCopied] = useState(false),
+    [shareLink, setShareLink] = useState(false);
   if (joinNeeded) return <Home code={code} onJoined={accept} />;
   if (loading)
     return (
@@ -71,7 +72,7 @@ export function Session({ code }: { code: string }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      setError(`Comparte este código: ${code}`);
+      setShareLink(true);
     }
   }
   const revealed = round?.status === 'revealed' || round?.status === 'finalized';
@@ -108,6 +109,21 @@ export function Session({ code }: { code: string }) {
           </button>
         </div>
       </header>
+      {shareLink && (
+        <div className="share-link-panel">
+          <label htmlFor="session-link">Copia este enlace para invitar al equipo</label>
+          <input
+            id="session-link"
+            readOnly
+            value={location.href}
+            onFocus={(event) => event.currentTarget.select()}
+            onClick={(event) => event.currentTarget.select()}
+          />
+          <button className="secondary" onClick={() => setShareLink(false)}>
+            Cerrar
+          </button>
+        </div>
+      )}
       {!connected && (
         <div className="connection-banner" role="status">
           Estamos reconectando. Tus votos están guardados; podrás continuar al recuperar la

@@ -10,6 +10,13 @@ test('dos personas estiman, repiten, guardan y recuperan su sesión', async ({ b
   await a.getByRole('button', { name: 'Crear sesión', exact: true }).click();
   await expect(a.getByRole('heading', { name: 'Sprint del equipo' })).toBeVisible();
   const url = a.url();
+  if (!new URL(url).hostname.includes('localhost') && new URL(url).protocol === 'http:') {
+    expect(await a.evaluate(() => window.isSecureContext)).toBe(false);
+    expect(await a.evaluate(() => typeof crypto.randomUUID)).toBe('undefined');
+    await a.getByRole('button', { name: 'Copiar enlace' }).click();
+    await expect(a.getByLabel('Copia este enlace para invitar al equipo')).toHaveValue(url);
+    await a.getByRole('button', { name: 'Cerrar', exact: true }).click();
+  }
   await b.goto(url);
   await b.getByLabel('Tu nombre').fill('Luis');
   await b.getByRole('button', { name: 'Unirme a la sesión' }).click();

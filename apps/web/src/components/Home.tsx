@@ -1,3 +1,4 @@
+import { newRequestId } from '../requestId';
 import { useRef, useState, type FormEvent } from 'react';
 import { ArrowRight, Users, Check, LockKeyhole, Coffee, Leaf } from 'lucide-react';
 import { FIBONACCI, type Scale, type SessionSnapshot } from '@poker/shared';
@@ -28,7 +29,7 @@ export function Home({
         ? new URL(joinCode).pathname.split('/').filter(Boolean).at(-1)!
         : joinCode.trim().toUpperCase();
       const key = JSON.stringify({ name: title, participantName: name, scale });
-      if (creation.current?.key !== key) creation.current = { key, requestId: crypto.randomUUID() };
+      if (creation.current?.key !== key) creation.current = { key, requestId: newRequestId() };
       const snapshot =
         tab === 'create'
           ? await api.create({

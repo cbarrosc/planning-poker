@@ -1454,3 +1454,17 @@ small {
     scroll-behavior: auto !important;
   }
 }
+.share-link-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+}
+.share-link-panel label {
+  flex-basis: 100%;
+}
+.share-link-panel input {
+  flex: 1;
+  min-width: 0;
+}
