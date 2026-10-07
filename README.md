@@ -8,7 +8,7 @@ Este proyecto nació de la necesidad de contar con una herramienta de Planning P
 
 El uso principal es dentro de la red local de un equipo u organización: una persona inicia la aplicación con Docker y el resto participa desde su navegador. Las sesiones, tareas y votos se almacenan en el equipo anfitrión.
 
-También puede alojarse en un servidor o VPS con acceso restringido a la red de la organización o mediante VPN. Que el código fuente sea público no implica que la aplicación deba estar disponible públicamente. La restricción de acceso corresponde a la configuración de la red, el firewall o el proxy; la aplicación no incorpora autenticación corporativa.
+Como alternativa, puedes alojarlo y exponerlo en tu VPS personal si deseas que otras personas accedan por Internet. Tú eliges el alcance del despliegue: red local, acceso privado mediante VPN o acceso público. La aplicación no incorpora autenticación corporativa; si necesitas restringir el acceso, debes configurarlo en la red, el firewall o el proxy.
 
 ## Arrancar con Docker
 
@@ -50,7 +50,7 @@ Para detener la aplicación, ejecuta `docker compose stop`. Para volver a inicia
 
 ### Servidor o VPS con HTTPS
 
-Para uso interno desde un servidor, limita el acceso a la red de la organización o a una VPN. HTTPS protege la conexión, pero por sí solo no restringe quién puede acceder a la aplicación.
+Este despliegue es opcional: permite publicar la aplicación en tu VPS personal y compartirla por Internet. Si prefieres mantenerla privada, puedes limitar el acceso a tu red o a una VPN. HTTPS protege la conexión, pero por sí solo no restringe quién puede acceder a la aplicación.
 
 Copia `.env.example` a `.env` y establece:
 
