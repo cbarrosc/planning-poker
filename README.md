@@ -14,9 +14,31 @@ El volumen `poker-data` conserva sesiones, tareas, rondas y votos al reiniciar. 
 
 ### Red local
 
-La configuración inicial permite entrar desde `http://localhost:3000` y desde `http://IP-DE-TU-PC:3000`. Comparte la dirección con personas conectadas a la misma red. Deja `PUBLIC_ORIGIN` vacío y `COOKIE_SECURE=false` para HTTP. Cada solicitud de escritura y conexión WebSocket debe tener el mismo origen que la dirección solicitada.
+Solo el equipo anfitrión necesita Docker instalado y en ejecución. Las demás personas pueden participar desde el navegador de su computador o teléfono, conectadas a la misma red.
 
-En Windows puedes consultar tu IPv4 con `ipconfig`. Si otros equipos no conectan, permite el puerto TCP 3000 en el firewall para redes privadas y comprueba que el Wi-Fi no tenga aislamiento de clientes. Mantén el equipo encendido. La identidad depende de la dirección usada: usa siempre la misma IP o nombre para conservar el acceso al moderador. En HTTP, el botón de compartir muestra un enlace seleccionable si el navegador no permite copiar automáticamente.
+1. En el equipo anfitrión, abre una terminal en la carpeta del proyecto y ejecuta `docker compose up --build -d`.
+2. Busca la IPv4 de la conexión Wi-Fi o Ethernet activa. En Windows, ejecuta `ipconfig`; utiliza la dirección de tu red, no la de los adaptadores virtuales de Docker o WSL.
+3. Abre `http://IP-DE-TU-PC:3000` también en el navegador del anfitrión. Por ejemplo, si la IPv4 es `192.168.1.154`, abre `http://192.168.1.154:3000`. Sustituye esa IP por la de tu equipo.
+4. Crea la sesión y pulsa **Copiar enlace**. Comparte ese enlace con el equipo. Si el navegador no permite copiar automáticamente por HTTP, aparecerá un campo para seleccionar y copiar el enlace manualmente.
+5. Los participantes abren el enlace y escriben su nombre para unirse. También pueden abrir la dirección del anfitrión, elegir **Unirse a sesión** e introducir el código.
+
+Usa la dirección de la red al crear y compartir sesiones: `localhost` apunta al equipo de cada participante. Mantén el anfitrión encendido y sin suspensión durante la sesión.
+
+La configuración inicial ya permite HTTP local. Si existe un archivo `.env` configurado antes para un VPS, ajusta estos valores y ejecuta `docker compose up -d`:
+
+```dotenv
+PUBLIC_ORIGIN=
+COOKIE_SECURE=false
+PORT=3000
+```
+
+Puedes cambiar `PORT` si el 3000 está ocupado; utiliza ese mismo puerto en los enlaces. Cada solicitud de escritura y conexión WebSocket debe tener el mismo origen que la dirección solicitada.
+
+**Si otro equipo no puede entrar:** comprueba que ambos estén en la misma red, permite el puerto TCP elegido en el firewall del anfitrión para redes privadas y revisa que el Wi-Fi no tenga aislamiento de clientes o de invitados. Para conectarse dentro de la misma red no hace falta abrir puertos en el router.
+
+**Identidad y datos:** usa siempre la misma dirección y navegador para conservar tu identidad y el rol de moderador. Entrar por `localhost` y por la IP genera identidades distintas. La IP puede cambiar al reconectar el equipo; una reserva DHCP en el router permite mantenerla estable. Las sesiones se conservan en el volumen de Docker.
+
+Para detener la aplicación, ejecuta `docker compose stop`. Para volver a iniciarla, ejecuta `docker compose up -d`.
 
 ### VPS con HTTPS
 
