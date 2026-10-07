@@ -1,0 +1,11 @@
+{
+  "name": "planning-poker-runtime",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "2.1.3",
+    "hono": "4.13.13",
+    "ws": "8.22.0",
+    "zod": "4.6.5"
+  }
+}

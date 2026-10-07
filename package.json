@@ -1,0 +1,36 @@
+{
+  "name": "planning-poker",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -k \"pnpm --filter @poker/server dev\" \"pnpm --filter @poker/web dev\"",
+    "test": "vitest run --configLoader runner",
+    "typecheck": "tsc --noEmit",
+    "build": "pnpm --filter @poker/web build && node scripts/build.mjs",
+    "start": "node dist/server.js",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/ws": "^8.0.0",
+    "concurrently": "^9.0.0",
+    "esbuild": "^0.25.0",
+    "prettier": "3.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.0",
+    "hono": "^4.0.0",
+    "ws": "^8.0.0",
+    "zod": "^4.0.0"
+  }
+}

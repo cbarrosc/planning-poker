@@ -1,0 +1,16 @@
+{
+  "name": "@poker/server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@poker/shared": "workspace:*",
+    "hono": "^4.0.0",
+    "@hono/node-server": "^2.0.0",
+    "ws": "^8.0.0",
+    "zod": "^4.0.0"
+  }
+}

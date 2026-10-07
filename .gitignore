@@ -1,0 +1,10 @@
+node_modules/
+.pnpm-store/
+dist/
+data/
+*.sqlite*
+.env
+.superpowers/
+test-results/
+playwright-report/
+.impeccable/
