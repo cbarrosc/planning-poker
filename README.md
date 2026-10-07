@@ -2,6 +2,14 @@
 
 Estima tareas en equipo, en tiempo real. Interfaz en español con la dirección visual **Menta social**. Monorepo TypeScript: React + Vite, Hono sobre Node.js, WebSocket y SQLite.
 
+## Propósito
+
+Este proyecto nació de la necesidad de contar con una herramienta de Planning Poker para uso interno, sin exponerla a Internet ni depender de un servicio externo para realizar las estimaciones.
+
+El uso principal es dentro de la red local de un equipo u organización: una persona inicia la aplicación con Docker y el resto participa desde su navegador. Las sesiones, tareas y votos se almacenan en el equipo anfitrión.
+
+También puede alojarse en un servidor o VPS con acceso restringido a la red de la organización o mediante VPN. Que el código fuente sea público no implica que la aplicación deba estar disponible públicamente. La restricción de acceso corresponde a la configuración de la red, el firewall o el proxy; la aplicación no incorpora autenticación corporativa.
+
 ## Arrancar con Docker
 
 ```sh
@@ -40,7 +48,9 @@ Puedes cambiar `PORT` si el 3000 está ocupado; utiliza ese mismo puerto en los 
 
 Para detener la aplicación, ejecuta `docker compose stop`. Para volver a iniciarla, ejecuta `docker compose up -d`.
 
-### VPS con HTTPS
+### Servidor o VPS con HTTPS
+
+Para uso interno desde un servidor, limita el acceso a la red de la organización o a una VPN. HTTPS protege la conexión, pero por sí solo no restringe quién puede acceder a la aplicación.
 
 Copia `.env.example` a `.env` y establece:
 
