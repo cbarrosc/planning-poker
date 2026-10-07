@@ -79,3 +79,7 @@ Guarda la copia fuera del servidor. Para restaurar, detén el servicio y extrae 
 - `docs/superpowers`: especificación y plan acordados.
 
 Los datos de cada sesión se guardan como un agregado JSON dentro de SQLite y se actualizan con transacciones `BEGIN IMMEDIATE`; credenciales y solicitudes idempotentes usan tablas separadas. Esto mantiene el despliegue simple y preserva consistencia para una réplica.
+
+## Licencia
+
+Este proyecto se distribuye bajo la [licencia MIT](LICENSE).
