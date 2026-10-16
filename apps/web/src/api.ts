@@ -8,16 +8,26 @@ export class ApiError extends Error {
   }
 }
 async function request<T>(url: string, body?: unknown): Promise<T> {
-  const res = await fetch(url, {
-    method: body === undefined ? 'GET' : 'POST',
-    credentials: 'same-origin',
-    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  const data = await res.json();
-  if (!res.ok)
-    throw new ApiError(res.status, data.error?.message ?? 'No pudimos completar la solicitud.');
-  return data;
+  const controller = new AbortController();
+  const timeout = setTimeout(
+    () => controller.abort(new Error('La solicitud tardó demasiado. Vuelve a intentarlo.')),
+    15000,
+  );
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      method: body === undefined ? 'GET' : 'POST',
+      credentials: 'same-origin',
+      headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok)
+      throw new ApiError(res.status, data.error?.message ?? 'No pudimos completar la solicitud.');
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 let identityPromise: Promise<unknown> | undefined;
 function ensureIdentity() {
