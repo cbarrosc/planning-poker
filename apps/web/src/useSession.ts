@@ -111,7 +111,8 @@ export function useSession(code: string) {
       try {
         accept(await api.get(code));
       } catch {
-        setConnected(false);
+        // El WebSocket controla la conexión. Un GET fallido no debe bloquear
+        // permanentemente las cartas si el socket sigue recibiendo snapshots.
       }
       return false;
     } finally {
