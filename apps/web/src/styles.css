@@ -565,6 +565,20 @@ small {
   position: relative;
   width: 100px;
 }
+.participant-remove.icon-button {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--muted);
+  z-index: 1;
+}
+.participant-remove.icon-button:hover:not(:disabled) {
+  color: var(--error);
+  background: var(--paper);
+}
 .avatar {
   width: 49px;
   height: 49px;

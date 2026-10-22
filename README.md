@@ -93,6 +93,10 @@ Playwright prueba el servidor compilado en puerto 3100 y crea una base independi
 5. Revelar y conversar: las estadísticas excluyen cartas especiales y personas sin voto. Las tallas no tienen promedio a menos que se configure una escala con valores numéricos.
 6. Repetir o elegir la estimación final; guardar y pasar a la siguiente tarea.
 
+Las tareas nuevas aparecen automáticamente en la lista de todos los participantes, sin recargar la página ni cambiar la votación en curso. En móvil, abre el panel de tareas para ver la lista.
+
+El moderador puede limpiar la mesa con la **×** junto a un participante y confirmar su expulsión. Se cierran sus conexiones a esa sala, incluidas otras pestañas, y se elimina su voto si la ronda está abierta. Los resultados ya revelados se conservan. La persona ve un aviso y puede volver a entrar voluntariamente: no es un bloqueo permanente. El moderador no puede expulsarse a sí mismo; para cambiar quién modera, utiliza la transferencia de moderación.
+
 La escala personalizada admite etiquetas separadas por comas y valores opcionales: `S=1, M=3, L=5`. Las etiquetas deben ser únicas; `?` y café se agregan automáticamente. Cambiar escala no reinterpreta resultados históricos. Al descartar se conservan los datos internos de ronda, pero ya no se muestran votos ni estadísticas de esa ronda. Eliminar una tarea elimina su historial tras confirmación.
 
 ## Configuración del servidor
