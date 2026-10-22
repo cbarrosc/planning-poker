@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useSession } from '../useSession';
 import { Brand } from './Brand';
+import { Copyright } from './Copyright';
 import { Home } from './Home';
 import { Participants } from './Participants';
 import { VotingDeck } from './VotingDeck';
@@ -288,7 +289,10 @@ export function Session({ code }: { code: string }) {
             </details>
           )}
           <footer className="session-footer">
-            <Leaf size={13} /> Las cartas abren la conversación.
+            <span className="footer-note">
+              <Leaf size={13} /> Las cartas abren la conversación.
+            </span>
+            <Copyright />
           </footer>
         </main>
         {tasksOpen && (

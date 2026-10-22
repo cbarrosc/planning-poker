@@ -1,4 +1,5 @@
 import { newRequestId } from '../requestId';
+import { Copyright } from './Copyright';
 import { useRef, useState, type FormEvent } from 'react';
 import { ArrowRight, Users, Check, LockKeyhole, Coffee, Leaf } from 'lucide-react';
 import { FIBONACCI, type Scale, type SessionSnapshot } from '@poker/shared';
@@ -174,7 +175,10 @@ export function Home({
           <p className="entry-note">Sin cuentas, sin vueltas. Comparte el enlace y listo.</p>
         </section>
       </main>
-      <footer className="home-footer">Menos adivinar. Más conversar.</footer>
+      <footer className="home-footer">
+        <span>Menos adivinar. Más conversar.</span>
+        <Copyright />
+      </footer>
     </div>
   );
 }

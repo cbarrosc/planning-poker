@@ -132,6 +132,12 @@ Guarda la copia fuera del servidor. Para restaurar, detén el servicio y extrae 
 
 Los datos de cada sesión se guardan como un agregado JSON dentro de SQLite y se actualizan con transacciones `BEGIN IMMEDIATE`; credenciales y solicitudes idempotentes usan tablas separadas. Esto mantiene el despliegue simple y preserva consistencia para una réplica.
 
+## Versionado
+
+La versión inicial es **0.1.0**. La fuente de la versión de la aplicación es el `version` del `package.json` de la raíz; Vite la incorpora al footer al compilar.
+
+Cada PR debe actualizarla según su alcance: una funcionalidad nueva incrementa la versión menor y reinicia el parche (`0.1.0` → `0.2.0`); una corrección incrementa el parche (`0.1.0` → `0.1.1`). Si combina funcionalidades y correcciones, aplica el incremento de funcionalidad. Este PR establece la versión inicial.
+
 ## Licencia
 
 Este proyecto se distribuye bajo la [licencia MIT](LICENSE).
