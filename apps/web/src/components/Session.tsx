@@ -23,6 +23,7 @@ export function Session({ code }: { code: string }) {
     snapshot: state,
     loading,
     joinNeeded,
+    removed,
     error,
     setError,
     connected,
@@ -33,7 +34,17 @@ export function Session({ code }: { code: string }) {
   const [tasksOpen, setTasksOpen] = useState(false),
     [copied, setCopied] = useState(false),
     [shareLink, setShareLink] = useState(false);
-  if (joinNeeded) return <Home code={code} onJoined={accept} />;
+  if (joinNeeded || removed)
+    return (
+      <>
+        {removed && (
+          <p className="connection-banner" role="status">
+            El moderador te ha expulsado de esta sesión. Puedes volver a unirte si lo necesitas.
+          </p>
+        )}
+        <Home code={code} onJoined={accept} />
+      </>
+    );
   if (loading)
     return (
       <div className="loading-page">
@@ -182,7 +193,7 @@ export function Session({ code }: { code: string }) {
               <Leaf size={34} />
             </span>
           </section>
-          <Participants state={state} />
+          <Participants state={state} disabled={disabled} send={send} />
           <div className="voting-status" role="status">
             {round?.status === 'open' ? (
               <>

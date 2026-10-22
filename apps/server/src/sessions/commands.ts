@@ -166,6 +166,15 @@ export function applyCommand(state: SessionState, actor: Actor, command: Command
       notOpen();
       state.moderatorVoting = command.voting;
       break;
+    case 'participant.remove':
+      requireState(command.participantId !== self.id, 'No puedes expulsarte a ti mismo.');
+      requireState(
+        state.participants.some((p) => p.id === command.participantId),
+        'Ese participante no existe.',
+      );
+      state.participants = state.participants.filter((p) => p.id !== command.participantId);
+      if (round?.status === 'open') delete round.votes[command.participantId];
+      break;
     case 'moderator.transfer':
       requireState(
         state.participants.some((p) => p.id === command.participantId),

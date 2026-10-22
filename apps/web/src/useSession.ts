@@ -6,19 +6,55 @@ export function useSession(code: string) {
   const [snapshot, setSnapshot] = useState<SessionSnapshot | null>(null),
     [loading, setLoading] = useState(true),
     [joinNeeded, setJoinNeeded] = useState(false),
+    [removed, setRemoved] = useState(false),
     [error, setError] = useState(''),
     [connected, setConnected] = useState(false),
     [busy, setBusy] = useState(false);
   const current = useRef<SessionSnapshot | null>(null);
   const sending = useRef(false);
   const uncertain = useRef<{ key: string; command: Command } | null>(null);
-  const accept = useCallback((next: SessionSnapshot) => {
-    if (!current.current || next.revision >= current.current.revision) {
-      current.current = next;
-      setSnapshot(next);
-      setJoinNeeded(false);
-    }
+  const revoked = useRef(false);
+  const membershipGeneration = useRef(0);
+  const markRemoved = useCallback(() => {
+    if (revoked.current) return;
+    revoked.current = true;
+    membershipGeneration.current++;
+    current.current = null;
+    uncertain.current = null;
+    sending.current = false;
+    setBusy(false);
+    setSnapshot(null);
+    setConnected(false);
+    setRemoved(true);
   }, []);
+  const accept = useCallback(
+    (next: SessionSnapshot) => {
+      if (revoked.current) return;
+      if (current.current && current.current.selfId !== next.selfId) {
+        markRemoved();
+        return;
+      }
+      if (!current.current || next.revision >= current.current.revision) {
+        current.current = next;
+        setSnapshot(next);
+        setJoinNeeded(false);
+      }
+    },
+    [markRemoved],
+  );
+  const acceptJoined = useCallback(
+    (next: SessionSnapshot) => {
+      membershipGeneration.current++;
+      revoked.current = false;
+      sending.current = false;
+      uncertain.current = null;
+      setBusy(false);
+      setRemoved(false);
+      setError('');
+      accept(next);
+    },
+    [accept],
+  );
   useEffect(() => {
     let active = true;
     api
@@ -55,11 +91,17 @@ export function useSession(code: string) {
         }/api/sessions/${code}/ws`,
       );
       socket.onmessage = (e) => {
+        if (disposed || revoked.current) return;
         try {
           const event = JSON.parse(e.data);
+          if (event.type === 'participant.removed') {
+            markRemoved();
+            return;
+          }
           if (event.type === 'snapshot' && event.sequence >= lastSequence) {
             lastSequence = event.sequence;
             accept(event.data);
+            if (revoked.current) return;
             setConnected(true);
             failures = 0;
           }
@@ -67,9 +109,24 @@ export function useSession(code: string) {
           setError('No pudimos sincronizar la sesión.');
         }
       };
-      socket.onclose = () => {
+      socket.onclose = (event) => {
         if (disposed) return;
+        if (event.code === 4003) {
+          markRemoved();
+          return;
+        }
+        if (revoked.current) return;
         setConnected(false);
+        // Una expulsión ocurrida durante un corte de red puede perder su aviso.
+        void api
+          .get(code)
+          .then((next) => {
+            if (!disposed) accept(next);
+          })
+          .catch((error) => {
+            if (!disposed && error instanceof ApiError && [401, 403].includes(error.status))
+              markRemoved();
+          });
         retry = setTimeout(connect, Math.min(1000 * 2 ** failures++, 10000));
       };
       socket.onerror = () => socket.close();
@@ -81,9 +138,10 @@ export function useSession(code: string) {
       socket.close();
       setConnected(false);
     };
-  }, [code, member, accept]);
+  }, [code, member, accept, markRemoved]);
   const send = async (input: CommandInput) => {
     if (!current.current || sending.current || !connected) return false;
+    const generation = membershipGeneration.current;
     sending.current = true;
     setBusy(true);
     setError('');
@@ -98,10 +156,13 @@ export function useSession(code: string) {
         },
       };
     try {
-      accept(await api.command(code, uncertain.current.command));
+      const next = await api.command(code, uncertain.current.command);
+      if (generation !== membershipGeneration.current) return false;
+      accept(next);
       uncertain.current = null;
       return true;
     } catch (e) {
+      if (generation !== membershipGeneration.current) return false;
       if (e instanceof ApiError) uncertain.current = null;
       setError(
         e instanceof ApiError
@@ -109,16 +170,36 @@ export function useSession(code: string) {
           : 'No recibimos la confirmación. Revisa el estado; puedes reintentar sin duplicar la operación.',
       );
       try {
-        accept(await api.get(code));
-      } catch {
+        const next = await api.get(code);
+        if (generation === membershipGeneration.current) accept(next);
+      } catch (refreshError) {
+        if (
+          generation === membershipGeneration.current &&
+          refreshError instanceof ApiError &&
+          [401, 403].includes(refreshError.status)
+        )
+          markRemoved();
         // El WebSocket controla la conexión. Un GET fallido no debe bloquear
         // permanentemente las cartas si el socket sigue recibiendo snapshots.
       }
       return false;
     } finally {
-      sending.current = false;
-      setBusy(false);
+      if (generation === membershipGeneration.current) {
+        sending.current = false;
+        setBusy(false);
+      }
     }
   };
-  return { snapshot, loading, joinNeeded, error, setError, connected, busy, send, accept };
+  return {
+    snapshot,
+    loading,
+    joinNeeded,
+    removed,
+    error,
+    setError,
+    connected,
+    busy,
+    send,
+    accept: acceptJoined,
+  };
 }

@@ -31,6 +31,7 @@ export const commandSchema = z
     z.object({ type: z.literal('round.discard') }),
     z.object({ type: z.literal('scale.set'), scale: scaleSchema }),
     z.object({ type: z.literal('moderator.transfer'), participantId: id }),
+    z.object({ type: z.literal('participant.remove'), participantId: id }),
     z.object({ type: z.literal('moderator.mode'), voting: z.boolean() }),
     z.object({ type: z.literal('session.close') }),
   ])
