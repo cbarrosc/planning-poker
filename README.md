@@ -121,6 +121,8 @@ Guarda la copia fuera del servidor. Para restaurar, detén el servicio y extrae 
 
 ## Estructura
 
+Los [diagramas C4 en Mermaid](docs/architecture-c4.md) describen contexto, contenedores, componentes, código y las alternativas de despliegue en LAN o VPS privada.
+
 - `apps/web`: interfaz, conexión y componentes.
 - `apps/server`: API, reglas, SQLite y sincronización.
 - `packages/shared`: contratos, validación, escalas y estadísticas.
