@@ -134,9 +134,9 @@ Los datos de cada sesión se guardan como un agregado JSON dentro de SQLite y se
 
 ## Versionado
 
-La versión inicial es **0.1.0**. La fuente de la versión de la aplicación es el `version` del `package.json` de la raíz; Vite la incorpora al footer al compilar.
+La versión inicial es **0.1.0**. Puedes consultar la versión instalada en el footer de la pantalla de inicio y de cada sala, donde aparece discretamente como `v0.1.0`. Su fuente es el campo `version` del `package.json` de la raíz; Vite lo incorpora al compilar.
 
-Cada PR debe actualizarla según su alcance: una funcionalidad nueva incrementa la versión menor y reinicia el parche (`0.1.0` → `0.2.0`); una corrección incrementa el parche (`0.1.0` → `0.1.1`). Si combina funcionalidades y correcciones, aplica el incremento de funcionalidad. Este PR establece la versión inicial.
+Cada PR debe actualizarla según su alcance: una funcionalidad nueva incrementa la versión menor y reinicia el parche (`0.1.0` → `0.2.0`); una corrección incrementa el parche (`0.1.0` → `0.1.1`). Si combina funcionalidades y correcciones, aplica el incremento de funcionalidad. La actualización se realiza en el propio PR, no automáticamente.
 
 ## Licencia
 

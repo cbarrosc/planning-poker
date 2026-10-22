@@ -1,9 +1,7 @@
-declare const __APP_VERSION__: string;
+import { APP_VERSION } from '../appInfo';
 
 export function Copyright() {
   return (
-    <small className="copyright">
-      © 2026 Camilo Barros - Eduardo Rojas <span aria-hidden="true">·</span> v{__APP_VERSION__}
-    </small>
+    <small className="copyright">v{APP_VERSION}</small>
   );
 }
