@@ -35,7 +35,10 @@ it('sincroniza instantáneas privadas, cuenta pestañas y aísla sesiones', asyn
       headers: { cookie: `poker_identity=${token}`, origin },
     });
     sockets.push(ws);
-    ws.on('message', (data) => updates[index].push(JSON.parse(data.toString()).data));
+    ws.on('message', (data) => {
+      const event = JSON.parse(data.toString());
+      if (event.type === 'snapshot') updates[index].push(event.data);
+    });
     await new Promise<void>((resolve, reject) => {
       ws.once('message', () => resolve());
       ws.once('error', reject);
@@ -69,6 +72,7 @@ it('sincroniza instantáneas privadas, cuenta pestañas y aísla sesiones', asyn
         expectedRevision: service.getSnapshot(a.actor, code).revision,
       });
     const task = run({ type: 'task.add', title: 'Buscador', description: '' }).tasks[0];
+    await wait(() => voter.messages.at(-1)?.tasks.some((t) => t.id === task.id) ?? false);
     run({ type: 'task.select', taskId: task.id });
     run({ type: 'round.open' });
     service.executeCommand(b.actor, code, {
@@ -88,6 +92,13 @@ it('sincroniza instantáneas privadas, cuenta pestañas y aísla sesiones', asyn
     await wait(() => second.messages.at(-1)?.round?.status === 'revealed');
     expect(Object.values(second.messages.at(-1)!.round!.votes!)).toEqual(['8']);
     expect(isolated.messages).toHaveLength(otherCount);
+    const voterTab = await connect(b.token, code);
+    const closed = [voter.ws, voterTab.ws].map(
+      (ws) => new Promise<number>((resolve) => ws.once('close', (code) => resolve(code))),
+    );
+    run({ type: 'participant.remove', participantId: service.getSnapshot(b.actor, code).selfId });
+    expect(await Promise.all(closed)).toEqual([4003, 4003]);
+    expect(() => service.getSnapshot(b.actor, code)).toThrow('No perteneces');
     second.ws.close();
     await wait(
       () =>

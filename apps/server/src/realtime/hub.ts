@@ -13,9 +13,15 @@ export function createHub(service: SessionService) {
   let sequence = 0;
   function publish(code: string) {
     const eventSequence = ++sequence;
+    const members = new Set(service.repo.load(code).participants.map((p) => p.id));
     for (const c of connections) {
       if (c.code !== code || c.ws.readyState !== 1) continue;
       try {
+        if (!members.has(c.participantId)) {
+          c.ws.send(JSON.stringify({ type: 'participant.removed' }));
+          c.ws.close(4003, 'Expulsado de la sesión');
+          continue;
+        }
         c.ws.send(
           JSON.stringify({
             type: 'snapshot',

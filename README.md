@@ -93,6 +93,10 @@ Playwright prueba el servidor compilado en puerto 3100 y crea una base independi
 5. Revelar y conversar: las estadísticas excluyen cartas especiales y personas sin voto. Las tallas no tienen promedio a menos que se configure una escala con valores numéricos.
 6. Repetir o elegir la estimación final; guardar y pasar a la siguiente tarea.
 
+Las tareas nuevas aparecen automáticamente en la lista de todos los participantes, sin recargar la página ni cambiar la votación en curso. En móvil, abre el panel de tareas para ver la lista.
+
+El moderador puede limpiar la mesa con la **×** junto a un participante y confirmar su expulsión. Se cierran sus conexiones a esa sala, incluidas otras pestañas, y se elimina su voto si la ronda está abierta. Los resultados ya revelados se conservan. La persona ve un aviso y puede volver a entrar voluntariamente: no es un bloqueo permanente. El moderador no puede expulsarse a sí mismo; para cambiar quién modera, utiliza la transferencia de moderación.
+
 La escala personalizada admite etiquetas separadas por comas y valores opcionales: `S=1, M=3, L=5`. Las etiquetas deben ser únicas; `?` y café se agregan automáticamente. Cambiar escala no reinterpreta resultados históricos. Al descartar se conservan los datos internos de ronda, pero ya no se muestran votos ni estadísticas de esa ronda. Eliminar una tarea elimina su historial tras confirmación.
 
 ## Configuración del servidor
@@ -129,6 +133,12 @@ Los [diagramas C4 en Mermaid](docs/architecture-c4.md) describen contexto, conte
 - `docs/superpowers`: especificación y plan acordados.
 
 Los datos de cada sesión se guardan como un agregado JSON dentro de SQLite y se actualizan con transacciones `BEGIN IMMEDIATE`; credenciales y solicitudes idempotentes usan tablas separadas. Esto mantiene el despliegue simple y preserva consistencia para una réplica.
+
+## Versionado
+
+La versión inicial es **0.1.0**. Puedes consultar la versión instalada en el footer de la pantalla de inicio y de cada sala, donde aparece discretamente como `v0.1.0`. Su fuente es el campo `version` del `package.json` de la raíz; Vite lo incorpora al compilar.
+
+Cada PR debe actualizarla según su alcance: una funcionalidad nueva incrementa la versión menor y reinicia el parche (`0.1.0` → `0.2.0`); una corrección incrementa el parche (`0.1.0` → `0.1.1`). Si combina funcionalidades y correcciones, aplica el incremento de funcionalidad. La actualización se realiza en el propio PR, no automáticamente.
 
 ## Licencia
 

@@ -41,9 +41,11 @@ export class SessionService {
     const command = commandSchema.parse(input);
     const fingerprint = JSON.stringify({ code, ...command });
     const state = transaction(this.db, () => {
-      const prior = this.repo.previous(actor.credentialId, command.requestId, fingerprint);
-      if (prior) return prior;
       const current = this.repo.load(code);
+      if (!current.participants.some((p) => p.credentialId === actor.credentialId))
+        throw new AppError(403, 'FORBIDDEN', 'No perteneces a esta sesión.');
+      const prior = this.repo.previous(actor.credentialId, command.requestId, fingerprint);
+      if (prior) return current;
       applyCommand(current, actor, command);
       this.repo.save(current);
       this.repo.remember(actor.credentialId, command.requestId, fingerprint, current);
@@ -56,7 +58,7 @@ export class SessionService {
     const fingerprint = JSON.stringify(input);
     const state = transaction(this.db, () => {
       const prior = this.repo.previous(actor.credentialId, input.requestId, fingerprint);
-      if (prior) return prior;
+      if (prior) return this.repo.load(prior.code);
       const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let code: string;
       do {

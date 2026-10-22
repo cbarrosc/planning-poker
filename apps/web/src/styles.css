@@ -1,4 +1,71 @@
 @import url('./tokens.css');
+.authors-dialog {
+  position: fixed;
+  width: min(440px, calc(100vw - 36px));
+  max-height: calc(100dvh - 36px);
+  overflow-y: auto;
+  margin: auto;
+  padding: 38px 28px 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(23, 76, 62, 0.2);
+}
+.authors-dialog::backdrop {
+  background: rgba(18, 49, 40, 0.38);
+  backdrop-filter: blur(4px);
+}
+.authors-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+.authors-leaf {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  color: var(--green);
+  background: var(--mint);
+}
+.authors-dialog h2 {
+  margin: 0 0 10px;
+  font-size: 29px;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.authors-intro {
+  margin: 0 auto;
+  max-width: 29ch;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+.authors-names {
+  margin: 26px 0 4px;
+  font-size: 16px;
+  font-weight: 750;
+  text-wrap: balance;
+}
+.authors-version {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.authors-return {
+  margin: 28px auto 0;
+}
+.authors-secret {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
 * {
   box-sizing: border-box;
 }
@@ -414,6 +481,9 @@ small {
   margin-top: 24px;
 }
 .home-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   padding: 24px 0;
   font-size: 12px;
   color: var(--muted);
@@ -564,6 +634,20 @@ small {
   align-items: center;
   position: relative;
   width: 100px;
+}
+.participant-remove.icon-button {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--muted);
+  z-index: 1;
+}
+.participant-remove.icon-button:hover:not(:disabled) {
+  color: var(--error);
+  background: var(--paper);
 }
 .avatar {
   width: 49px;
@@ -1096,12 +1180,26 @@ small {
 }
 .session-footer {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 5px;
   font-size: 11px;
   color: var(--muted);
   padding: 30px 0 22px;
+}
+.footer-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.copyright {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.6;
+  text-wrap: balance;
 }
 .session-error {
   margin: 12px 30px;

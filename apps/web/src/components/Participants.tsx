@@ -1,12 +1,36 @@
-import { Check, Coffee, Leaf, Crown } from 'lucide-react';
-import type { SessionSnapshot } from '@poker/shared';
-export function Participants({ state }: { state: SessionSnapshot }) {
+import { Check, Coffee, Leaf, Crown, X } from 'lucide-react';
+import type { CommandInput, SessionSnapshot } from '@poker/shared';
+export function Participants({
+  state,
+  disabled,
+  send,
+}: {
+  state: SessionSnapshot;
+  disabled: boolean;
+  send: (command: CommandInput) => Promise<boolean>;
+}) {
   const revealed = state.round?.status === 'revealed' || state.round?.status === 'finalized';
   return (
     <div className="team-table">
       <div className="participants">
         {state.participants.map((p, i) => (
           <div className="participant" key={p.id}>
+            {state.selfId === state.session.moderatorId &&
+              p.id !== state.selfId &&
+              !state.session.closed && (
+                <button
+                  className="participant-remove icon-button"
+                  aria-label={`Expulsar a ${p.name}`}
+                  title={`Expulsar a ${p.name}`}
+                  disabled={disabled}
+                  onClick={() => {
+                    if (confirm(`¿Expulsar a ${p.name} de esta sesión?`))
+                      void send({ type: 'participant.remove', participantId: p.id });
+                  }}
+                >
+                  <X size={14} />
+                </button>
+              )}
             <div className={`avatar tone-${i % 5}`} aria-hidden="true">
               {p.name.slice(0, 2).toUpperCase()}
               <span className={`presence ${p.online ? 'online' : ''}`} />

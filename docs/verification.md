@@ -1,5 +1,15 @@
 # Verificación — 2026-10-07
 
+## Expulsión simple y tareas en vivo — 2026-10-22
+
+- Nuevo comando `participant.remove`: exclusivo del moderador, no permite expulsarse a sí mismo y elimina el voto solo si la ronda sigue abierta. Los votos revelados e históricos se conservan.
+- El hub notifica la expulsión y cierra con código 4003 todas las conexiones del participante. La membresía se verifica antes de devolver respuestas idempotentes; el reingreso es voluntario y obtiene un participante nuevo.
+- Los navegadores expulsados muestran el formulario de ingreso con aviso, sin reconectarse automáticamente. Se comprueba la membresía al perder la conexión y se ignoran respuestas de una membresía anterior después de volver a entrar.
+- La publicación de tareas por WebSocket ya existía: se mantiene y se comprueba con sockets reales y con varios navegadores, incluso agregando tareas durante una votación abierta. No se recarga la página ni se cambia la tarea activa.
+- Cobertura nueva: permisos, limpieza de votos abiertos, conservación de historial, reintentos tras expulsión, cierre de varias pestañas, cancelar/confirmar, reingreso, autorización 403 sin expulsión y respuesta 403 antigua tras reingresar.
+- Interfaz revisada en escritorio y móvil de 390 px; botón × accesible por nombre y sin desbordamiento horizontal.
+- Validación: 25 pruebas unitarias/servidor, tipos y compilación correctos. Los siete escenarios Playwright pasan (la primera ejecución requirió corregir el selector de una alerta en la prueba nueva y repetir ambos escenarios nuevos). Se mantienen los casos de diez participantes y recuperación de respuestas bloqueadas. Revisión independiente sin hallazgos pendientes.
+
 - `pnpm test`: 20 pruebas pasaron (escalas, estadísticas, permisos, identidad, SQLite, votos secretos, concurrencia, WebSocket, salud, archivos estáticos, UUID en HTTP y orígenes LAN/VPS).
 - `pnpm typecheck`: sin errores.
 - `pnpm build`: frontend y servidor compilados correctamente. Rollup informa dos advertencias sobre comentarios de anotación de Zod; no afectan la compilación.
